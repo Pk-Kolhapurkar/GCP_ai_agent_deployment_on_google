@@ -1,0 +1,27 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/{your_project_id}/my-ml-app", "."]
+
+  # Step 2: Push the Docker image to GCR
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/{your_project_id}/my-ml-app"]
+
+  # Step 3: Deploy the image to Cloud Run
+  #- name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "my-ml-app",
+        "--image",
+        "gcr.io/{your_project_id}/my-ml-app",
+        "--platform",
+        "managed",
+        "--region",
+        "us-central1",
+        "--allow-unauthenticated",
+        "--service-account=***************-compute@developer.gserviceaccount.com",
+      ]
